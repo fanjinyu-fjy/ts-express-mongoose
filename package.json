@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node-dev --respawn src/index.ts",
-    "dev": "nodemon --exec ts-node src/index.ts"
+    "dev": "PORT=8000 nodemon --exec ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +18,8 @@
     "ts-node": "^8.6.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
