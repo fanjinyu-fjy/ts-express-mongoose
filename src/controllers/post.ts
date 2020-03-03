@@ -8,6 +8,31 @@ import { IUserDocument } from "../models/User";
 import { throwPostNotFoundError } from "../utils/throwError";
 import { checkBody } from "../utils/validator";
 
+export const likePost = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    const user = req.currentUser as IUserDocument;
+    if (post) {
+      if (post.likes.find(like => like.username === user.username)) {
+        post.likes = post.likes.filter(like => like.username !== user.username);
+      } else {
+        post.likes.push({
+          username: user.username,
+          createAt: new Date().toISOString()
+        });
+      }
+      await post.save();
+      res.json({
+        success: true,
+        data: { post }
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getPosts = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await Post.find();

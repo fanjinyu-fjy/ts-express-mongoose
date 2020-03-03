@@ -9,7 +9,8 @@ import {
   createPost,
   getPost,
   updatePost,
-  deletePost
+  deletePost,
+  likePost
 } from "./controllers/post";
 import checkAuthMiddleware from "./middlewares/check-auth.middleware";
 // import bodyParser from "body-parser";
@@ -38,6 +39,8 @@ app
   .get(getPost)
   .put(checkAuthMiddleware, updatePost)
   .delete(checkAuthMiddleware, deletePost);
+
+app.post("/posts/:id/like", checkAuthMiddleware, likePost);
 
 // app.get("/posts", getPost);
 // app.post("/posts", createPost);
