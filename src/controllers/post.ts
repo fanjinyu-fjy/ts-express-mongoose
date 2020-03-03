@@ -23,7 +23,7 @@ export const getPosts = async (_req: Request, res: Response, next: NextFunction)
 export const getPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const post = await Post.findById(id);
+    const post = await Post.findById(id).populate("user", "-password");
 
     if (post) {
       res.json({
