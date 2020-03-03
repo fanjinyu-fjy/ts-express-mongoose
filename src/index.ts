@@ -5,6 +5,7 @@ import HttpException from "./exceptions/HttpException";
 import errorMiddleware from "./middlewares/error.middleware";
 import { postRegister, postLogin } from "./controllers/user";
 import { getPost, createPost } from "./controllers/post";
+import checkAuthMiddleware from "./middlewares/check-auth.middleware";
 // import bodyParser from "body-parser";
 
 const app: Express = express();
@@ -22,8 +23,13 @@ app.get("/", (_req: Request, res: Response) => {
 app.post("/users/register", postRegister);
 app.post("/users/login", postLogin);
 
-app.get("/posts", getPost);
-app.post("/posts", createPost);
+app
+  .route("/posts")
+  .get(getPost)
+  .post(checkAuthMiddleware, createPost);
+
+// app.get("/posts", getPost);
+// app.post("/posts", createPost);
 
 app.use((_req: Request, _res: Response, next: NextFunction) => {
   const error: HttpException = new HttpException(NOT_FOUND, "Router Not Found");

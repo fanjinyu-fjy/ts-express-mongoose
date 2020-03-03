@@ -46,8 +46,6 @@ export const postLogin = async (
         token
       }
     });
-
-    next();
   } catch (error) {
     next(error);
   }

@@ -3,6 +3,8 @@ import Post from "../models/Post";
 import validator from "validator";
 import HttpException from "../exceptions/HttpException";
 import { UNPROCESSABLE_ENTITY } from "http-status-codes";
+import { RequestWithUser } from "../types/RequestWithUser";
+import { IUserDocument } from "../models/User";
 
 export const getPost = async (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,8 +18,14 @@ export const getPost = async (_req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const createPost = async (req: Request, res: Response, next: NextFunction) => {
+export const createPost = async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    const user = req.currentUser as IUserDocument;
+
     const { body } = req.body;
 
     if (validator.isEmpty(body.trim())) {
@@ -28,7 +36,9 @@ export const createPost = async (req: Request, res: Response, next: NextFunction
 
     const newPost = new Post({
       body,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      username: user.username,
+      user: user.id
     });
 
     await newPost.save();
