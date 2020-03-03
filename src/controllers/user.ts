@@ -4,11 +4,7 @@ import HttpException from "../exceptions/HttpException";
 import { UNPROCESSABLE_ENTITY } from "http-status-codes";
 import User, { IUserDocument } from "../models/User";
 
-export const postRegister = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-) => {
+export const postRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, password, confirmPassword, email } = req.body;
     const { errors, valid } = validateRegisterInput(
@@ -39,7 +35,13 @@ export const postRegister = async (
     });
 
     const resUser: IUserDocument = await newUser.save();
-    console.log(resUser);
+
+    res.json({
+      success: true,
+      data: {
+        user: resUser._doc
+      }
+    });
   } catch (error) {
     next(error);
   }
