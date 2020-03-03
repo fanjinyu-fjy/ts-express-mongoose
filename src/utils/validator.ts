@@ -13,7 +13,7 @@ export const validateLoginInput = (
   password: IUserDocument["password"]
 ) => {
   let errors: LoginInputError = {};
-  if (validator.isEmpty(username)) {
+  if (validator.isEmpty(username.trim())) {
     errors.username = "Username must not be empty";
   }
   if (validator.isEmpty(password)) {
@@ -41,7 +41,7 @@ export const validateRegisterInput = (
   if (!validator.equals(password, confirmPassword)) {
     errors.confirmPassword = "password not equal confirmPassword";
   }
-  if (validator.isEmpty(email)) {
+  if (validator.isEmpty(email.trim())) {
     errors.email = "Email must not be empty";
   }
 
