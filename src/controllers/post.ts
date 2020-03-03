@@ -3,7 +3,7 @@ import Post from "../models/Post";
 import validator from "validator";
 import HttpException from "../exceptions/HttpException";
 import { UNPROCESSABLE_ENTITY } from "http-status-codes";
-import { RequestWithUser } from "../types/RequestWithUser";
+// import { RequestWithUser } from "../types/RequestWithUser";
 import { IUserDocument } from "../models/User";
 
 export const getPost = async (_req: Request, res: Response, next: NextFunction) => {
@@ -18,11 +18,7 @@ export const getPost = async (_req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const createPost = async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) => {
+export const createPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.currentUser as IUserDocument;
 
@@ -41,11 +37,12 @@ export const createPost = async (
       user: user.id
     });
 
-    await newPost.save();
+    const post = await newPost.save();
     res.json({
       success: true,
       data: {
-        message: "created successful"
+        message: "created successful",
+        post
       }
     });
   } catch (error) {

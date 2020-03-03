@@ -1,13 +1,13 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { JwtPayload } from "../types/Jwt";
 import HttpException from "../exceptions/HttpException";
 import { UNAUTHORIZED } from "http-status-codes";
-import { RequestWithUser } from "../types/RequestWithUser";
+// import { RequestWithUser } from "../types/RequestWithUser";
 
 const checkAuthMiddleware = async (
-  req: RequestWithUser,
+  req: Request,
   _res: Response,
   next: NextFunction
 ) => {
