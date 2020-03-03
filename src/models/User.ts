@@ -3,7 +3,7 @@ import uuid = require("uuid");
 import { NextFunction } from "express";
 // import validator from "validator";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 enum Role {
   basic = "basic",
   admin = "admin"
@@ -15,6 +15,7 @@ export interface IUserDocument extends Document {
   email: string;
   _doc: IUserDocument;
   role: Role;
+  generateToken: () => string;
 }
 
 const userSchema: Schema<IUserDocument> = new Schema({
@@ -46,6 +47,12 @@ const userSchema: Schema<IUserDocument> = new Schema({
     default: uuid.v4()
   }
 });
+
+userSchema.methods.generateToken = function(): string {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY!, {
+    expiresIn: "24h"
+  });
+};
 
 userSchema.pre<IUserDocument>("save", async function save(next: NextFunction) {
   if (!this.isModified("password")) {
