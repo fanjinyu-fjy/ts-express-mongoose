@@ -45,6 +45,8 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
 
     const token = resUser.generateToken();
 
+    const sortList = await User.orderByUsernameDesc();
+    console.log(sortList);
     res.json({
       success: true,
       data: {

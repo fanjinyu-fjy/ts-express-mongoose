@@ -1,12 +1,17 @@
-import { Schema, model, Model, Document } from "mongoose";
+import { Schema, model, Model, Document, DocumentQuery } from "mongoose";
 import uuid = require("uuid");
 import { NextFunction } from "express";
 // import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { JwtPayload } from "src/types/Jwt";
 enum Role {
   basic = "basic",
   admin = "admin"
+}
+interface IUserModel extends Model<IUserDocument> {
+  admin: () => DocumentQuery<IUserDocument | null, IUserDocument, {}>;
+  orderByUsernameDesc: () => DocumentQuery<IUserDocument | null, IUserDocument, {}>;
 }
 
 export interface IUserDocument extends Document {
@@ -57,10 +62,18 @@ const userSchema: Schema<IUserDocument> = new Schema(
 // userSchema.set("timestamps", true);
 
 userSchema.methods.generateToken = function(): string {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY!, {
+  const payload: JwtPayload = { id: this._id };
+  return jwt.sign(payload, process.env.JWT_SECRET_KEY!, {
     expiresIn: "24h"
   });
 };
+
+userSchema.static("admin", () => {
+  return User.findOne({ username: "ffff" });
+});
+userSchema.static("orderByUsernameDesc", () => {
+  return User.find({}).sort({ username: -1 });
+});
 
 userSchema.pre<IUserDocument>("save", async function save(next: NextFunction) {
   // if (this.isNew) {
@@ -81,6 +94,7 @@ userSchema.pre<IUserDocument>("save", async function save(next: NextFunction) {
   }
 });
 
-const User: Model<IUserDocument> = model<IUserDocument>("User", userSchema);
+// const User: Model<IUserDocument> = model<IUserDocument, IUserModel>("User", userSchema);
+const User: IUserModel = model<IUserDocument, IUserModel>("User", userSchema);
 
 export default User;
