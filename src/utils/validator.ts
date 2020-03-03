@@ -1,5 +1,7 @@
 import validator from "validator";
-import { IUserDocument } from "src/models/User";
+import { IUserDocument } from "../models/User";
+import HttpException from "../exceptions/HttpException";
+import { UNPROCESSABLE_ENTITY } from "http-status-codes";
 
 export interface LoginInputError extends Partial<IUserDocument> {
   general?: string;
@@ -50,4 +52,12 @@ export const validateRegisterInput = (
   // }
 
   return { errors, valid: Object.keys(errors).length < 1 };
+};
+
+export const checkBody = (body: string) => {
+  if (validator.isEmpty(body.trim())) {
+    throw new HttpException(UNPROCESSABLE_ENTITY, "Body must be not empty", {
+      body: "The body must be not empty"
+    });
+  }
 };

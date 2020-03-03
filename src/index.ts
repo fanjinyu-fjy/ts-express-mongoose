@@ -4,7 +4,13 @@ import { NOT_FOUND } from "http-status-codes";
 import HttpException from "./exceptions/HttpException";
 import errorMiddleware from "./middlewares/error.middleware";
 import { postRegister, postLogin } from "./controllers/user";
-import { getPost, createPost } from "./controllers/post";
+import {
+  getPosts,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost
+} from "./controllers/post";
 import checkAuthMiddleware from "./middlewares/check-auth.middleware";
 // import bodyParser from "body-parser";
 
@@ -25,8 +31,13 @@ app.post("/users/login", postLogin);
 
 app
   .route("/posts")
-  .get(getPost)
+  .get(getPosts)
   .post(checkAuthMiddleware, createPost);
+app
+  .route("/posts/:id")
+  .get(getPost)
+  .put(checkAuthMiddleware, updatePost)
+  .delete(checkAuthMiddleware, deletePost);
 
 // app.get("/posts", getPost);
 // app.post("/posts", createPost);
