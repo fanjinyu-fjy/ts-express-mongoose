@@ -13,7 +13,8 @@ const errorMiddleware = (
 
   res.status(status).json({
     success: false,
-    message
+    message,
+    error: error.errors
   });
   next();
 };
