@@ -25,14 +25,21 @@ export const postRegister = async (
       );
     }
 
-    const user: IUserDocument = new User({
+    const user = await User.findOne({ username });
+    if (user) {
+      throw new HttpException(UNPROCESSABLE_ENTITY, "Username is existed", {
+        username: "The username is exist"
+      });
+    }
+
+    const newUser: IUserDocument = new User({
       username,
       password,
       email
     });
 
-    const newUser: IUserDocument = await user.save();
-    console.log(newUser);
+    const resUser: IUserDocument = await newUser.save();
+    console.log(resUser);
   } catch (error) {
     next(error);
   }

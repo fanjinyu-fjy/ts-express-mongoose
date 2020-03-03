@@ -1,17 +1,15 @@
 import validator from "validator";
+import { IUserDocument } from "src/models/User";
 
-interface RegisterInputError {
-  username?: string;
-  password?: string;
+interface RegisterInputError extends Partial<IUserDocument> {
   confirmPassword?: string;
-  email?: string;
 }
 
 export const validateRegisterInput = (
-  username: string,
-  password: string,
-  confirmPassword: string,
-  email: string
+  username: IUserDocument["username"],
+  password: IUserDocument["password"],
+  confirmPassword: IUserDocument["password"],
+  email: IUserDocument["email"]
 ) => {
   let errors: RegisterInputError = {};
   if (username === undefined || validator.isEmpty(username)) {
