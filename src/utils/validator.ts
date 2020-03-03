@@ -1,9 +1,26 @@
 import validator from "validator";
 import { IUserDocument } from "src/models/User";
 
-interface RegisterInputError extends Partial<IUserDocument> {
+export interface LoginInputError extends Partial<IUserDocument> {
+  general?: string;
+}
+export interface RegisterInputError extends Partial<IUserDocument> {
   confirmPassword?: string;
 }
+
+export const validateLoginInput = (
+  username: IUserDocument["username"],
+  password: IUserDocument["password"]
+) => {
+  let errors: LoginInputError = {};
+  if (validator.isEmpty(username)) {
+    errors.username = "Username must not be empty";
+  }
+  if (validator.isEmpty(password)) {
+    errors.password = "Password must not be empty";
+  }
+  return { errors, valid: Object.keys(errors).length < 1 };
+};
 
 export const validateRegisterInput = (
   _username: IUserDocument["username"],

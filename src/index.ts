@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { NOT_FOUND } from "http-status-codes";
 import HttpException from "./exceptions/HttpException";
 import errorMiddleware from "./middlewares/error.middleware";
-import { postRegister } from "./controllers/user";
+import { postRegister, postLogin } from "./controllers/user";
 // import bodyParser from "body-parser";
 
 const app: Express = express();
@@ -19,6 +19,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.post("/users/register", postRegister);
+app.post("/users/login", postLogin);
 
 app.use((_req: Request, _res: Response, next: NextFunction) => {
   const error: HttpException = new HttpException(NOT_FOUND, "Router Not Found");
