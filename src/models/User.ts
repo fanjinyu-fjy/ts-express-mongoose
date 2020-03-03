@@ -13,40 +13,48 @@ export interface IUserDocument extends Document {
   username: string;
   password: string;
   email: string;
-  _doc: IUserDocument;
   role: Role;
+  // createAt: string;
+  // updateAt: string;
+  // updateAt: Date;
+  _doc: IUserDocument;
   generateToken: () => string;
 }
 
-const userSchema: Schema<IUserDocument> = new Schema({
-  username: {
-    type: String,
-    required: [true, "必须填写"],
-    minlength: [6, "最少6位"]
+const userSchema: Schema<IUserDocument> = new Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "必须填写"],
+      minlength: [6, "最少6位"]
+    },
+    password: String,
+    email: {
+      type: String,
+      // validate: {
+      //   validator: validator.isEmail
+      // }
+      trim: true,
+      match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+    },
+    role: {
+      type: String,
+      enum: ["basic", "admin"],
+      default: "basic"
+    },
+    // createAt: String,
+    // updateAt: String,
+    // createAt: { type: String, default: Date.now() },
+    // updateAt: { type: Date, default: Date.now() },
+    uuid: {
+      type: String,
+      default: uuid.v4()
+    }
   },
-  password: String,
-  email: {
-    type: String,
-    // validate: {
-    //   validator: validator.isEmail
-    // }
-    trim: true,
-    match: /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
-  },
-  role: {
-    type: String,
-    enum: ["basic", "admin"],
-    default: "basic"
-  },
-  createAt: {
-    type: String,
-    default: Date.now
-  },
-  uuid: {
-    type: String,
-    default: uuid.v4()
-  }
-});
+  { timestamps: true }
+);
+
+// userSchema.set("timestamps", true);
 
 userSchema.methods.generateToken = function(): string {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY!, {
@@ -55,6 +63,11 @@ userSchema.methods.generateToken = function(): string {
 };
 
 userSchema.pre<IUserDocument>("save", async function save(next: NextFunction) {
+  // if (this.isNew) {
+  //   this.createAt = new Date().toISOString();
+  // }
+  // this.updateAt = new Date().toISOString();
+
   if (!this.isModified("password")) {
     return next();
   }

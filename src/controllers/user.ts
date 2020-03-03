@@ -37,6 +37,8 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
       password,
       // password: hashedPassword,
       email
+      // createAt: new Date(),
+      // updateAt: new Date()
     });
 
     const resUser: IUserDocument = await newUser.save();
@@ -46,7 +48,8 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
     res.json({
       success: true,
       data: {
-        user: token
+        token: token,
+        user: resUser._doc
       }
     });
   } catch (error) {
