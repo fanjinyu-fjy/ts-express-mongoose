@@ -4,6 +4,8 @@ import HttpException from "../exceptions/HttpException";
 import { UNPROCESSABLE_ENTITY } from "http-status-codes";
 import User, { IUserDocument } from "../models/User";
 // import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 export const postRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -40,10 +42,14 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
 
     const resUser: IUserDocument = await newUser.save();
 
+    const token = jwt.sign({ id: resUser }, process.env.JWT_SECRET_KEY!, {
+      expiresIn: "720h"
+    });
+
     res.json({
       success: true,
       data: {
-        user: resUser._doc
+        user: token
       }
     });
   } catch (error) {
