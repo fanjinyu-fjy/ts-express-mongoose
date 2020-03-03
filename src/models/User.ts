@@ -1,6 +1,8 @@
 import { Schema, model, Model, Document } from "mongoose";
 import uuid = require("uuid");
+import { NextFunction } from "express";
 // import validator from "validator";
+import bcrypt from "bcryptjs";
 
 enum Role {
   basic = "basic",
@@ -42,6 +44,20 @@ const userSchema: Schema<IUserDocument> = new Schema({
   uuid: {
     type: String,
     default: uuid.v4()
+  }
+});
+
+userSchema.pre<IUserDocument>("save", async function save(next: NextFunction) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    next(error);
   }
 });
 

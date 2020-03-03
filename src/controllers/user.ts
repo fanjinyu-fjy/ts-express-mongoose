@@ -3,6 +3,7 @@ import { validateRegisterInput } from "../utils/validator";
 import HttpException from "../exceptions/HttpException";
 import { UNPROCESSABLE_ENTITY } from "http-status-codes";
 import User, { IUserDocument } from "../models/User";
+// import bcrypt from "bcryptjs";
 
 export const postRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,9 +29,12 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser: IUserDocument = new User({
       username,
       password,
+      // password: hashedPassword,
       email
     });
 
