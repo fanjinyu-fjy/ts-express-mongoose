@@ -58,7 +58,8 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction) 
       meta: "page"
     };
     const options = { page, limit: 2, customLabels: myCustomLabels };
-    const posts = await Post.paginate({ username: "1xx123aa23" }, options);
+    // const posts = await Post.paginate({ username: "1xx123aa23" }, options);
+    const posts = await Post.paginate({}, options);
     res.json({
       success: true,
       data: posts

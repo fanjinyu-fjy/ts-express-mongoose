@@ -12,7 +12,9 @@ import {
   deletePost,
   likePost
 } from "./controllers/post";
+
 import checkAuthMiddleware from "./middlewares/check-auth.middleware";
+import { createComment } from "./controllers/comment";
 // import bodyParser from "body-parser";
 
 const app: Express = express();
@@ -41,6 +43,8 @@ app
   .delete(checkAuthMiddleware, deletePost);
 
 app.post("/posts/:id/like", checkAuthMiddleware, likePost);
+
+app.post("/posts/:id/comment", checkAuthMiddleware, createComment);
 
 // app.get("/posts", getPost);
 // app.post("/posts", createPost);
