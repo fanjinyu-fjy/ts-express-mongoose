@@ -6,7 +6,7 @@ interface Like {
   createAt: IPostDocument["createAt"];
 }
 
-interface IPostDocument extends Document {
+export interface IPostDocument extends Document {
   body: string;
   createAt: string;
   username: string;
@@ -14,7 +14,7 @@ interface IPostDocument extends Document {
   likes: Like[];
 }
 
-const PostSchema: Schema = new Schema({
+export const PostSchema: Schema = new Schema({
   body: String,
   createAt: String,
   username: String,

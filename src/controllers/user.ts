@@ -43,7 +43,8 @@ export const postLogin = async (
     res.json({
       success: true,
       data: {
-        token
+        token,
+        user
       }
     });
   } catch (error) {
@@ -99,7 +100,6 @@ export const postRegister = async (req: Request, res: Response, next: NextFuncti
         user: resUser._doc
       }
     });
-    next();
   } catch (error) {
     next(error);
   }

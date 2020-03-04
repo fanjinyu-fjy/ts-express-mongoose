@@ -13,16 +13,26 @@ export const likePost = async (req: Request, res: Response, next: NextFunction) 
     const { id } = req.params;
     const post = await Post.findById(id);
     const user = req.currentUser as IUserDocument;
+
     if (post) {
       if (post.likes.find(like => like.username === user.username)) {
         post.likes = post.likes.filter(like => like.username !== user.username);
+
+        // user.like_posts = user.like_posts.filter(
+        //   post => post.username !== user.username
+        // );
+        user.like_posts = user.like_posts.filter(id => id === post._id);
       } else {
         post.likes.push({
           username: user.username,
           createAt: new Date().toISOString()
         });
+
+        user.like_posts.push(post.id);
       }
       await post.save();
+      await user.save();
+
       res.json({
         success: true,
         data: { post }

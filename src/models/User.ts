@@ -5,6 +5,9 @@ import { NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "src/types/Jwt";
+// import { PostSchema, IPostDocument } from "./Post";
+import { IPostDocument } from "./Post";
+
 enum Role {
   basic = "basic",
   admin = "admin"
@@ -24,6 +27,8 @@ export interface IUserDocument extends Document {
   // updateAt: Date;
   _doc: IUserDocument;
   generateToken: () => string;
+  // like_posts: IPostDocument[];
+  like_posts: IPostDocument["_id"][];
 }
 
 const userSchema: Schema<IUserDocument> = new Schema(
@@ -54,7 +59,14 @@ const userSchema: Schema<IUserDocument> = new Schema(
     uuid: {
       type: String,
       default: uuid.v4()
-    }
+    },
+    // like_posts: { type: [PostSchema] }
+    like_posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "posts"
+      }
+    ]
   },
   { timestamps: true }
 );
