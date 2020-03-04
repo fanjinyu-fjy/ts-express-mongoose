@@ -1,11 +1,12 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, PaginateModel } from "mongoose";
 import { IUserDocument } from "./User";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 interface Like {
   username: IPostDocument["username"];
   createAt: IPostDocument["createAt"];
 }
-
+interface IPostModel extends PaginateModel<IPostDocument> {}
 export interface IPostDocument extends Document {
   body: string;
   createAt: string;
@@ -14,7 +15,7 @@ export interface IPostDocument extends Document {
   likes: Like[];
 }
 
-export const PostSchema: Schema = new Schema({
+export const postSchema: Schema = new Schema({
   body: String,
   createAt: String,
   username: String,
@@ -31,5 +32,7 @@ export const PostSchema: Schema = new Schema({
   ]
 });
 
-const Post = model<IPostDocument>("post", PostSchema);
+postSchema.plugin(mongoosePaginate);
+
+const Post = model<IPostDocument, IPostModel>("post", postSchema);
 export default Post;

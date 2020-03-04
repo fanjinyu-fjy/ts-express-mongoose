@@ -43,12 +43,25 @@ export const likePost = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const getPosts = async (_req: Request, res: Response, next: NextFunction) => {
+export const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const posts = await Post.find();
+    const { page } = req.query;
+    const myCustomLabels = {
+      totalDocs: "total_count",
+      docs: "posts",
+      limit: "limit_value",
+      page: "current_page",
+      nextPage: "next",
+      prevPage: "prev",
+      totalPages: "num_pages",
+      pagingCounter: "slNo",
+      meta: "page"
+    };
+    const options = { page, limit: 2, customLabels: myCustomLabels };
+    const posts = await Post.paginate({ username: "1xx123aa23" }, options);
     res.json({
       success: true,
-      data: { posts }
+      data: posts
     });
   } catch (error) {
     next(error);
