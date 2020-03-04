@@ -6,6 +6,7 @@ interface Comment {
   username: IPostDocument["username"];
   createAt: IPostDocument["createAt"];
   body: IPostDocument["body"];
+  id?: IPostDocument["_id"];
 }
 interface Like {
   username: IPostDocument["username"];
